@@ -1,0 +1,168 @@
+# Proxy-Groups Anchors
+Selector: &Selector {type: select, disable-udp: false, hidden: false, include-all: true}
+UrlTest:  &UrlTest  {type: url-test, interval: 5400, tolerance: 100, lazy: true, url: "https://www.gstatic.com/generate_204", disable-udp: false, timeout: 3000, max-failed-times: 3, hidden: false}
+# Rule-Providers Anchors
+DomainMrs: &DomainMrs {type: http, interval: 0, proxy: 🚀Global, behavior: domain, format: mrs}
+IPcidrMrs: &IPcidrMrs {type: http, interval: 0, proxy: 🚀Global, behavior: ipcidr, format: mrs}
+mode: rule
+mixed-port: 7890
+ipv6: true
+allow-lan: false
+bind-address: "*"
+lan-allowed-ips: 
+  - 192.168.0.0/16
+  - fc00::/7
+unified-delay: false
+tcp-concurrent: false
+log-level: silent
+find-process-mode: off
+geodata-mode: false
+geodata-loader: memconservative
+geosite-matcher: mph
+geo-auto-update: false
+global-ua: clash.meta
+etag-support: true
+disable-keep-alive: true
+keep-alive-idle: 30
+keep-alive-interval: 15
+skip-auth-prefixes: 
+  - 127.0.0.1/24
+  - ::1/128
+  - fc00::/7
+profile: 
+  store-selected: true
+  store-fake-ip: false
+sniffer: 
+  enable: false
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: false
+  sniff: 
+    HTTP: 
+      ports: [80, 8080-8880]
+      override-destination: false
+    TLS: 
+      ports: [443, 8443]
+      override-destination: false
+    QUIC: 
+      ports: [443, 8443]
+      override-destination: false
+tun: 
+  enable: true
+  stack: system
+  mtu: 9000
+  udp-timeout: 300
+  auto-route: true
+  strict-route: true
+  auto-redirect: false
+  auto-detect-interface: true
+  disable-icmp-forwarding: true
+  endpoint-independent-nat: false
+  dns-hijack:
+    - "any:53"
+dns: 
+  enable: true
+  cache-algorithm: lru
+  cache-max-size: 1024
+  prefer-h3: false
+  use-hosts: false
+  use-system-hosts: false
+  respect-rules: false
+#  listen: 0.0.0.0:1053
+  ipv6: true
+  ipv6-timeout: 200
+  enhanced-mode: fake-ip
+  fake-ip-ttl: 1
+  fake-ip-range: 198.51.100.0/24 # 198.18.0.1/16
+  fake-ip-range6: 2001:2::/64 # fd00:ffff::/112
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter: 
+    - "*.lan"
+    - "+.microsoftonline-p.com"
+    - "+.microsoftonline.com"
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
+    - "+.microsoft.com"
+    - "+.dl.l.google.com"
+    - mtalk.google.com
+    - mtalk-dev.google.com
+    - mtalk-staging.google.com
+    - mtalk4.google.com
+    - alt1-mtalk.google.com
+    - alt2-mtalk.google.com
+    - alt3-mtalk.google.com
+    - alt4-mtalk.google.com
+    - alt5-mtalk.google.com
+    - alt6-mtalk.google.com
+    - alt7-mtalk.google.com
+    - alt8-mtalk.google.com
+    - rule-set:geolocation-cn
+  default-nameserver: 
+    - "quic://223.5.5.5:853"
+  nameserver: 
+    - "tcp://8.8.8.8#🚀Global&disable-ipv6=true"
+  proxy-server-nameserver: 
+    - "quic://223.5.5.5:853"
+  nameserver-policy: 
+    "rule-set:tld-cn,geolocation-cn": 
+      - system
+  direct-nameserver: 
+    - "quic://223.5.5.5:853"
+  direct-nameserver-follow-policy: true
+proxy-groups: 
+  - {name: Google,   type: select, hidden: false, proxies: [🇭🇰HongKong, 🇸🇬Singapore, 🇹🇼Taiwan, 🇺🇸United States, 🇯🇵Japan, 🇰🇷South Korea, 🚀Global, 🛰Others]}
+  - {name: Telegram, type: select, hidden: false, proxies: [🇸🇬Singapore, 🇭🇰HongKong, 🇹🇼Taiwan, 🇺🇸United States, 🇯🇵Japan, 🇰🇷South Korea, 🚀Global, 🛰Others]}
+  - {name: Meta,     type: select, hidden: false, proxies: [🚀Global, 🇸🇬Singapore, 🇭🇰HongKong, 🇹🇼Taiwan, 🇺🇸United States, 🇯🇵Japan, 🇰🇷South Korea, 🛰Others]}
+  - {name: AI Platform,  type: select, hidden: false, proxies: [🇺🇸United States, 🇭🇰HongKong, 🇸🇬Singapore, 🇹🇼Taiwan, 🇯🇵Japan, 🇰🇷South Korea, 🚀Global, 🛰Others]}
+  # Areas
+  - {name: 🚀Global, <<: *Selector, proxies: [🚀Global-Auto]}
+  - {name: 🇭🇰HongKong, <<: *Selector, proxies: [🇭🇰HK-Auto], filter: "/香港|🇭🇰|HK|HongKong|HKG/i"}
+  - {name: 🇸🇬Singapore, <<: *Selector, proxies: [🇸🇬SG-Auto], filter: "/坡|🇸🇬|狮城|新加坡|SG|Singapore|SIN|XSP/i"}
+  - {name: 🇹🇼Taiwan, <<: *Selector, proxies: [🇹🇼TW-Auto], filter: "/台灣|台湾|🇼🇸|🇹🇼|TW|tai|TPE|TSA|KHH/i"}
+  - {name: 🇺🇸United States, <<: *Selector, proxies: [🇺🇸US-Auto], filter: "/美|美国|🇺🇸|US|凤凰城|西雅图|USA|JFK|LAX|ORD|ATL|DFW|SFO|MIA|SEA|IAD/i"}
+  - {name: 🇯🇵Japan, <<: *Selector, proxies: [🇯🇵JP-Auto], filter: "/日本|东京|🇯🇵|JP|Japan|NRT|HND|KIX|CTS|FUK/i"}
+  - {name: 🇰🇷South Korea, <<: *Selector, proxies: [🇰🇷ROK-Auto], filter: "/韩国|🇰🇷|韓|首尔|南朝鲜|KR|KOR|ROK|Korea|South/i"}
+  - {name: 🛰Others, <<: *Selector, exclude-filter: "香港|坡|狮城|新加坡|台灣|台湾|日本|东京|韩|韩国|韓|首尔|南朝鲜|美|美国|凤凰城|西雅图|HK|HKG|HongKong|SG|SIN|XSP|Singapore|TW|tai|TPE|TSA|KHH|JP|Japan|NRT|HND|KIX|CTS|FUK|KR|KOR|ROK|Korea|South|US|USA|JFK|LAX|ORD|ATL|DFW|SFO|MIA|SEA|IAD|🇭🇰|🇸🇬|🇹🇼|🇯🇵|🇰🇷|🇺🇸|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|续费|更多|客户端|官方|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author"}
+  # Auto
+  - {name: 🚀Global-Auto, <<: *UrlTest, exclude-filter: "DIRECT|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|续费|更多|客户端|官方|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author"}
+  - {name: 🇭🇰HK-Auto, <<: *UrlTest, filter: "/香港|🇭🇰|HK|HongKong|HKG/i"}
+  - {name: 🇸🇬SG-Auto, <<: *UrlTest, filter: "/坡|🇸🇬|狮城|新加坡|SG|Singapore|SIN|XSP/i"}
+  - {name: 🇹🇼TW-Auto, <<: *UrlTest, filter: "/台灣|台湾|🇼🇸|🇹🇼|TW|tai|TPE|TSA|KHH/i"}
+  - {name: 🇺🇸US-Auto, <<: *UrlTest, filter: "/美|美国|🇺🇸|US|凤凰城|西雅图|USA|JFK|LAX|ORD|ATL|DFW|SFO|MIA|SEA|IAD/i"}
+  - {name: 🇯🇵JP-Auto, <<: *UrlTest, filter: "/日本|东京|🇯🇵|JP|Japan|NRT|HND|KIX|CTS|FUK/i"}
+  - {name: 🇰🇷ROK-Auto, <<: *UrlTest, filter: "/韩国|🇰🇷|韓|首尔|南朝鲜|KR|KOR|ROK|Korea|South/i"}
+proxies:
+rules: 
+  # REJECT
+  - RULE-SET,category-ads-all,REJECT-DROP
+  # Domain
+  - RULE-SET,category-ai-!cn,AI Platform
+  - RULE-SET,youtube,Google
+  - RULE-SET,google,Google
+  - RULE-SET,github,Google
+  - RULE-SET,telegram,Telegram
+  - RULE-SET,meta,Meta
+  - RULE-SET,geolocation-cn,DIRECT
+  - RULE-SET,tld-cn,DIRECT
+  # IP
+  - RULE-SET,google_ip,Google,no-resolve
+  - RULE-SET,telegram_ip,Telegram,no-resolve
+  - RULE-SET,facebook_ip,Meta,no-resolve
+  - RULE-SET,cn_ip,DIRECT
+  - MATCH,🚀Global
+rule-providers: 
+  # Domain
+  telegram: {<<: *DomainMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/telegram.mrs}
+  youtube:  {<<: *DomainMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/youtube.mrs}
+  github:   {<<: *DomainMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/github.mrs}
+  meta:     {<<: *DomainMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/meta.mrs}
+  google:   {<<: *DomainMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geosite/google.mrs}
+  category-ads-all: {<<: *DomainMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ads-all.mrs}
+  category-ai-!cn:  {<<: *DomainMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.mrs}
+  geolocation-cn:   {<<: *DomainMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/geolocation-cn.mrs}
+  tld-cn:           {<<: *DomainMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/tld-cn.mrs}
+  # IP
+  facebook_ip: {<<: *IPcidrMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/facebook.mrs}
+  google_ip:   {<<: *IPcidrMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/google.mrs}
+  telegram_ip: {<<: *IPcidrMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/telegram.mrs}
+  cn_ip:       {<<: *IPcidrMrs, url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/cn.mrs}
